@@ -9,6 +9,7 @@ ClaudeCode Bridge embeds a fully interactive [Claude Code](https://docs.anthropi
 - **Embedded terminal** — xterm.js-based terminal running inside an Obsidian side panel
 - **One-click Claude launch** — Start Claude Code with a single button press or command
 - **Vault-aware system prompt** — Automatically injects Obsidian markdown rules (wikilinks, tags, frontmatter, embeds, callouts) so Claude respects your vault conventions
+- **Editor context auto-injection** — Automatically feeds the active file info to Claude on every prompt via a `UserPromptSubmit` hook — no manual steps needed
 - **File path insertion** — Send the active note's path to the terminal with `Cmd+Shift+L`
 - **Selection forwarding** — Send selected text to the terminal with `Cmd+Shift+E`
 - **Customizable system prompt** — Edit the injected prompt freely or switch between language presets (Korean / English)
@@ -71,6 +72,18 @@ When you launch Claude through ClaudeCode Bridge, the plugin:
 
 You can fully customize the prompt in settings or switch between the Korean and English presets.
 
+## Editor context hook
+
+ClaudeCode Bridge automatically registers a [Claude Code hook](https://docs.anthropic.com/en/docs/claude-code/hooks) so that Claude always knows which file you are looking at.
+
+On plugin load, the plugin:
+
+1. Tracks the active file and writes its path to a temporary JSON file (`claudecode-bridge-context.json`)
+2. Adds a `UserPromptSubmit` hook to `<vault>/.claude/settings.json` that runs `cat` on the JSON file
+3. Every time you send a prompt, Claude Code automatically injects the current editor context — no manual command needed
+
+The hook is idempotent; reloading the plugin will not create duplicates.
+
 ## Project Structure
 
 ```
@@ -84,6 +97,8 @@ src/
   services/
     ShellSpawner.ts    # PTY process management
     VaultContext.ts     # Vault path and file utilities
+    ActiveFileTracker.ts  # Active file tracking and context file sync
+    ClaudeHookInstaller.ts # UserPromptSubmit hook registration
   views/
     TerminalView.ts    # Terminal view with xterm.js
 ```

@@ -94,7 +94,7 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 
 	// 리본 아이콘 등록
 	private registerRibbonIcon(): void {
-		this.addRibbonIcon('terminal', 'ClaudeCode Bridge', () => {
+		this.addRibbonIcon('square-terminal', 'ClaudeCode Bridge', () => {
 			this.activateTerminalView();
 		});
 	}
