@@ -78,17 +78,10 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'insert-file-path',
-			name: 'ClaudeCode Bridge: Insert active file path',
+			id: 'send-to-terminal',
+			name: 'ClaudeCode Bridge: Send to terminal',
 			hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'l' }],
-			callback: () => this.insertFilePathToTerminal(),
-		});
-
-		this.addCommand({
-			id: 'send-selection',
-			name: 'ClaudeCode Bridge: Send selection to terminal',
-			hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'e' }],
-			editorCallback: () => this.sendSelectionToTerminal(),
+			callback: () => this.sendContextToTerminal(),
 		});
 	}
 
@@ -152,21 +145,8 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 		}, 300);
 	}
 
-	// 현재 파일 경로를 터미널에 삽입
-	private insertFilePathToTerminal(): void {
-		const view = this.getTerminalView();
-		if (!view) {
-			return;
-		}
-
-		const filePath = this.vaultContext?.getActiveFilePath();
-		if (filePath) {
-			view.writeToTerminal(`@${filePath}`);
-		}
-	}
-
-	// 선택된 텍스트를 터미널에 전송
-	private sendSelectionToTerminal(): void {
+	// 선택 영역이 있으면 선택 텍스트를, 없으면 파일 경로를 터미널에 전송
+	private sendContextToTerminal(): void {
 		const view = this.getTerminalView();
 		if (!view) {
 			return;
@@ -175,6 +155,12 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 		const selection = this.vaultContext?.getSelectedText();
 		if (selection) {
 			view.writeToTerminal(selection);
+			return;
+		}
+
+		const filePath = this.vaultContext?.getActiveFilePath();
+		if (filePath) {
+			view.writeToTerminal(`@${filePath}`);
 		}
 	}
 

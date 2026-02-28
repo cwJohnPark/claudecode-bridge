@@ -10,8 +10,7 @@ ClaudeCode Bridge embeds a fully interactive [Claude Code](https://docs.anthropi
 - **One-click Claude launch** — Start Claude Code with a single button press or command
 - **Vault-aware system prompt** — Automatically injects Obsidian markdown rules (wikilinks, tags, frontmatter, embeds, callouts) so Claude respects your vault conventions
 - **Editor context auto-injection** — Automatically feeds the active file info to Claude on every prompt via a `UserPromptSubmit` hook — no manual steps needed
-- **File path insertion** — Send the active note's path to the terminal with `Cmd+Shift+L`
-- **Selection forwarding** — Send selected text to the terminal with `Cmd+Shift+E`
+- **Smart send** — `Cmd+Shift+L` sends selected text to the terminal, or inserts the active file path if nothing is selected
 - **Customizable system prompt** — Edit the injected prompt freely or switch between language presets (Korean / English)
 - **i18n settings UI** — Settings panel automatically adapts to your system language (English, Korean, Japanese, Chinese)
 - **Dark / Light theme** — Terminal theme follows your preference
@@ -33,8 +32,8 @@ ClaudeCode Bridge embeds a fully interactive [Claude Code](https://docs.anthropi
 ### Build from source
 
 ```bash
-git clone https://github.com/cwJohnPark/claudian.git
-cd claudian
+git clone https://github.com/cwJohnPark/claudecode-bridge.git
+cd claudecode-bridge
 npm install
 npm run build
 ```
@@ -47,8 +46,7 @@ Copy `main.js`, `manifest.json`, and `styles.css` into your vault's plugin direc
 |---|---|---|
 | **ClaudeCode Bridge: Open terminal** | — | Open the terminal panel |
 | **ClaudeCode Bridge: Launch Claude** | — | Start Claude Code in the terminal |
-| **ClaudeCode Bridge: Insert active file path** | `Cmd+Shift+L` | Insert current note path into terminal |
-| **ClaudeCode Bridge: Send selection to terminal** | `Cmd+Shift+E` | Send selected text to terminal |
+| **ClaudeCode Bridge: Send to terminal** | `Cmd+Shift+L` | Send selected text, or insert active file path if nothing is selected |
 
 ## Settings
 
