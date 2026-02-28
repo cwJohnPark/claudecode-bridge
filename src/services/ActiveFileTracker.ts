@@ -39,7 +39,7 @@ export class ActiveFileTracker {
 
 	// Vault 기반 절대 경로 생성
 	private resolveAbsolutePath(file: TFile): string {
-		const adapter = this.app.vault.adapter as any;
+		const adapter = this.app.vault.adapter as { getBasePath?: () => string };
 		const basePath = adapter.getBasePath?.() ?? '';
 		return `${basePath}/${file.path}`;
 	}

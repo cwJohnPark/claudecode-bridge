@@ -1,4 +1,4 @@
-import { Plugin, WorkspaceLeaf } from 'obsidian';
+import { Plugin } from 'obsidian';
 import { TerminalView } from './views/TerminalView';
 import { VaultContext } from './services/VaultContext';
 import { ActiveFileTracker } from './services/ActiveFileTracker';
@@ -24,13 +24,12 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 		this.registerSettingsTab();
 	}
 
-	async onunload(): Promise<void> {
-		this.app.workspace.detachLeavesOfType(TERMINAL_VIEW_TYPE);
+	onunload(): void {
 	}
 
 	// Claude Code UserPromptSubmit hook 설치
 	private installClaudeHook(): void {
-		const adapter = this.app.vault.adapter as any;
+		const adapter = this.app.vault.adapter as { getBasePath?: () => string };
 		const basePath = adapter.getBasePath?.();
 		if (basePath) {
 			ClaudeHookInstaller.install(basePath);
@@ -67,28 +66,27 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 	private registerCommands(): void {
 		this.addCommand({
 			id: 'open-terminal',
-			name: 'ClaudeCode Bridge: Open terminal',
-			callback: () => this.activateTerminalView(),
+			name: 'Open terminal',
+			callback: () => { void this.activateTerminalView(); },
 		});
 
 		this.addCommand({
 			id: 'launch-claude',
-			name: 'ClaudeCode Bridge: Launch Claude',
-			callback: () => this.launchClaudeInTerminal(),
+			name: 'Launch claude',
+			callback: () => { void this.launchClaudeInTerminal(); },
 		});
 
 		this.addCommand({
 			id: 'send-to-terminal',
-			name: 'ClaudeCode Bridge: Send to terminal',
-			hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'l' }],
+			name: 'Send to terminal',
 			callback: () => this.sendContextToTerminal(),
 		});
 	}
 
 	// 리본 아이콘 등록
 	private registerRibbonIcon(): void {
-		this.addRibbonIcon('square-terminal', 'ClaudeCode Bridge', () => {
-			this.activateTerminalView();
+		this.addRibbonIcon('square-terminal', 'Open terminal', () => {
+			void this.activateTerminalView();
 		});
 	}
 
@@ -98,7 +96,7 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 			this.app,
 			this,
 			this.settings,
-			(updated) => this.onSettingsChanged(updated)
+			(updated) => { void this.onSettingsChanged(updated); }
 		);
 
 		this.addSettingTab(settingsTab);
@@ -109,7 +107,7 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 		const existing = this.app.workspace.getLeavesOfType(TERMINAL_VIEW_TYPE);
 
 		if (existing.length > 0) {
-			this.app.workspace.revealLeaf(existing[0]);
+			await this.app.workspace.revealLeaf(existing[0]);
 			return;
 		}
 
@@ -123,7 +121,7 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 			active: true,
 		});
 
-		this.app.workspace.revealLeaf(leaf);
+		await this.app.workspace.revealLeaf(leaf);
 	}
 
 	// 터미널 뷰 인스턴스 가져오기
@@ -166,8 +164,8 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 
 	// 설정 로드
 	private async loadSettings(): Promise<void> {
-		const data = await this.loadData();
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+		const data = (await this.loadData()) as Partial<PluginSettings> | undefined;
+		this.settings = { ...DEFAULT_SETTINGS, ...data };
 	}
 
 	// 설정 변경 처리

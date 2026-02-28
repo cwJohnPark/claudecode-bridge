@@ -1,4 +1,4 @@
-import { ItemView, WorkspaceLeaf } from 'obsidian';
+import { ItemView, WorkspaceLeaf, setIcon } from 'obsidian';
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { writeFileSync } from 'fs';
@@ -35,14 +35,14 @@ export class TerminalView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return 'ClaudeCode Bridge';
+		return 'Claude terminal';
 	}
 
 	getIcon(): string {
 		return 'terminal';
 	}
 
-	async onOpen(): Promise<void> {
+	onOpen(): void {
 		const container = this.containerEl.children[1] as HTMLElement;
 		container.empty();
 		container.addClass('ccb-container');
@@ -54,7 +54,7 @@ export class TerminalView extends ItemView {
 		this.observeResize(terminalHost);
 	}
 
-	async onClose(): Promise<void> {
+	onClose(): void {
 		this.resizeObserver?.disconnect();
 		this.shellSpawner.kill();
 		this.terminal?.dispose();
@@ -131,8 +131,6 @@ export class TerminalView extends ItemView {
 			cls: 'ccb-action-button',
 			attr: { 'aria-label': title, title },
 		});
-		// Obsidian의 아이콘 설정
-		const { setIcon } = require('obsidian');
 		setIcon(button, icon);
 		button.addEventListener('click', handler);
 	}

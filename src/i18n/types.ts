@@ -16,6 +16,8 @@ export type TranslationKey =
 	| 'settings.systemPrompt.name'
 	| 'settings.systemPrompt.desc'
 	| 'settings.systemPrompt.placeholder'
+	| 'settings.hotkeys.name'
+	| 'settings.hotkeys.desc'
 	| 'terminal.action.launchClaude'
 	| 'terminal.action.insertFilePath'
 	| 'terminal.action.restart'

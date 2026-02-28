@@ -1,4 +1,4 @@
-import { App, TFile } from 'obsidian';
+import { App, MarkdownView } from 'obsidian';
 
 // Vault 경로 및 파일 컨텍스트 제공
 export class VaultContext {
@@ -6,7 +6,7 @@ export class VaultContext {
 
 	// Vault의 절대 경로 반환
 	getVaultBasePath(): string {
-		const adapter = this.app.vault.adapter as any;
+		const adapter = this.app.vault.adapter as { getBasePath?: () => string };
 		return adapter.getBasePath?.() ?? '';
 	}
 
@@ -23,9 +23,7 @@ export class VaultContext {
 
 	// 에디터에서 선택된 텍스트 반환
 	getSelectedText(): string | null {
-		const activeView = this.app.workspace.getActiveViewOfType(
-			require('obsidian').MarkdownView
-		);
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 		if (!activeView) {
 			return null;
 		}

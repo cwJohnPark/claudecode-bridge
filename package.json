@@ -11,13 +11,16 @@
 	"author": "cwjohnpark",
 	"license": "MIT",
 	"dependencies": {
-		"@xterm/xterm": "^5.5.0",
-		"@xterm/addon-fit": "^0.10.0"
+		"@xterm/addon-fit": "^0.10.0",
+		"@xterm/xterm": "^5.5.0"
 	},
 	"devDependencies": {
 		"@types/node": "^20.0.0",
+		"@typescript-eslint/parser": "^8.56.1",
 		"builtin-modules": "^4.0.0",
 		"esbuild": "^0.21.0",
+		"eslint": "^9.39.3",
+		"eslint-plugin-obsidianmd": "^0.1.9",
 		"obsidian": "latest",
 		"typescript": "^5.4.0"
 	}

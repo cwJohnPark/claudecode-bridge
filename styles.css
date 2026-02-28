@@ -235,3 +235,8 @@
 .ccb-host .xterm-screen {
 	height: 100%;
 }
+
+.ccb-system-prompt {
+	width: 100%;
+	min-height: 200px;
+}

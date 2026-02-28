@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
+import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 import { PluginSettings } from '../types';
 import { SYSTEM_PROMPTS } from '../constants';
 import { t } from '../i18n';
@@ -12,7 +12,7 @@ export class SettingsTab extends PluginSettingTab {
 
 	constructor(
 		app: App,
-		plugin: any,
+		plugin: Plugin,
 		settings: PluginSettings,
 		onChanged: OnSettingsChanged
 	) {
@@ -32,6 +32,7 @@ export class SettingsTab extends PluginSettingTab {
 		this.addClaudeArgsSetting(containerEl);
 		this.addPromptLanguageSetting(containerEl);
 		this.addSystemPromptSetting(containerEl);
+		this.addHotkeysSetting(containerEl);
 	}
 
 	updateSettings(settings: PluginSettings): void {
@@ -145,8 +146,14 @@ export class SettingsTab extends PluginSettingTab {
 						this.onChanged(this.settings);
 					});
 				textArea.inputEl.rows = 12;
-				textArea.inputEl.style.width = '100%';
-				textArea.inputEl.style.minHeight = '200px';
+				textArea.inputEl.addClass('ccb-system-prompt');
 			});
+	}
+
+	// 단축키 안내
+	private addHotkeysSetting(container: HTMLElement): void {
+		new Setting(container)
+			.setName(t('settings.hotkeys.name'))
+			.setDesc(t('settings.hotkeys.desc'));
 	}
 }
