@@ -1,7 +1,7 @@
 {
 	"name": "claudian",
 	"version": "1.0.0",
-	"description": "AI-powered terminal bridging Claude Code and your Obsidian vault",
+	"description": "AI-powered terminal bringing Claude Code into your knowledge vault.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
