@@ -143,23 +143,29 @@ export default class ClaudeCodeBridgePlugin extends Plugin {
 		}, 300);
 	}
 
-	// 선택 영역이 있으면 선택 텍스트를, 없으면 파일 경로를 터미널에 전송
+	// 파일 참조 문자열을 터미널에 전송 (@파일경로#L시작-종료)
 	private sendContextToTerminal(): void {
 		const view = this.getTerminalView();
 		if (!view) {
 			return;
 		}
 
-		const selection = this.vaultContext?.getSelectedText();
-		if (selection) {
-			view.writeToTerminal(selection);
+		const filePath = this.vaultContext?.getActiveFilePath();
+		if (!filePath) {
 			return;
 		}
 
-		const filePath = this.vaultContext?.getActiveFilePath();
-		if (filePath) {
+		const lineRange = this.vaultContext?.getSelectionLineRange();
+		if (!lineRange) {
 			view.writeToTerminal(`@${filePath}`);
+			return;
 		}
+
+		const lineSuffix = lineRange.end
+			? `#L${lineRange.start}-${lineRange.end}`
+			: `#L${lineRange.start}`;
+
+		view.writeToTerminal(`@${filePath}${lineSuffix}`);
 	}
 
 	// 설정 로드

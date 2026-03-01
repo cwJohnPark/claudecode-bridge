@@ -32,4 +32,24 @@ export class VaultContext {
 		const selection = editor.getSelection();
 		return selection || null;
 	}
+
+	// 에디터 커서/선택 영역의 라인 번호 반환 (1-based)
+	getSelectionLineRange(): { start: number; end: number | null } | null {
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!activeView) {
+			return null;
+		}
+
+		const editor = activeView.editor;
+		const from = editor.getCursor('from');
+		const to = editor.getCursor('to');
+		const startLine = from.line + 1;
+		const endLine = to.line + 1;
+
+		if (startLine === endLine) {
+			return { start: startLine, end: null };
+		}
+
+		return { start: startLine, end: endLine };
+	}
 }
